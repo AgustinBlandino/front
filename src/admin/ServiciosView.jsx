@@ -11,12 +11,21 @@ export default function ServiciosView() {
 
   const cargar = async () => {
     const resServicios = await fetch('http://localhost:5000/api/servicios')
-    setServicios(await resServicios.json())
+    const data = await resServicios.json()
+    const serviciosNormalizados = data.map(s => ({
+      ...s,
+      id_Proveedor: s.iD_Proveedor,
+      id_Destino: s.iD_Destino
+    }))
+    setServicios(serviciosNormalizados)
+
 
     const resProveedores = await fetch('http://localhost:5000/api/proveedores')
     setProveedores(await resProveedores.json())
 
     const resDestinos = await fetch('http://localhost:5000/api/destinos')
+
+
     setDestinos(await resDestinos.json())
   }
 
@@ -52,11 +61,15 @@ export default function ServiciosView() {
           {proveedores.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
         </select>
 
-        <select className="border px-2 py-1" value={nuevo.id_Destino}
-          onChange={e => setNuevo({ ...nuevo, id_Destino: parseInt(e.target.value) })}>
+        <select className="border px-2 py-1" value={nuevo.idDestino}
+          onChange={e => setNuevo({ ...nuevo, id: parseInt(e.target.value) })}>
           <option value="">Destino</option>
           {destinos.map(d => <option key={d.id} value={d.id}>{d.descripcion}</option>)}
         </select>
+        {/* <select value={s.idDestino} onChange={e => actualizar(i, 'idDestino', e.target.value)} className="border w-full">
+          <option value="">--</option>
+          {destinos.map(d => <option key={d.id} value={d.id}>{d.descripcion}</option>)}
+        </select> */}
 
         <input placeholder="Tipo de Servicio" className="border px-2 py-1" value={nuevo.tipoServicio}
           onChange={e => setNuevo({ ...nuevo, tipoServicio: e.target.value })} />
