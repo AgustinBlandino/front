@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 export default function CotizacionesView() {
-    const [clientes, setClientes] = useState([])
-    const [clienteSeleccionado, setClienteSeleccionado] = useState("")
-    const [cotizaciones, setCotizaciones] = useState([])
-    const [servicios, setServicios] = useState([])
-    const [seleccionada, setSeleccionada] = useState(null)
+    const [clientes, setClientes] = useState([]);
+    const [clienteSeleccionado, setClienteSeleccionado] = useState("");
+    const [cotizaciones, setCotizaciones] = useState([]);
+    const [servicios, setServicios] = useState([]);
+    const [seleccionada, setSeleccionada] = useState(null);
 
-    const [destinos, setDestinos] = useState([])
-    const [proveedores, setProveedores] = useState([])
-    const [catalogoServicios, setCatalogoServicios] = useState([])
+    const [destinos, setDestinos] = useState([]);
+    const [proveedores, setProveedores] = useState([]);
+    const [catalogoServicios, setCatalogoServicios] = useState([]);
 
     useEffect(() => {
         const cargarDatos = async () => {
@@ -18,25 +18,25 @@ export default function CotizacionesView() {
                 fetch('https://backend-anda-production.up.railway.app/api/destinos'),
                 fetch('https://backend-anda-production.up.railway.app/api/proveedores'),
                 fetch('https://backend-anda-production.up.railway.app/api/servicios'),
-            ])
-            setClientes(await resClientes.json())
-            setDestinos(await resDestinos.json())
-            setProveedores(await resProveedores.json())
-            setCatalogoServicios(await resServicios.json())
-        }
-        cargarDatos()
-    }, [])
+            ]);
+            setClientes(await resClientes.json());
+            setDestinos(await resDestinos.json());
+            setProveedores(await resProveedores.json());
+            setCatalogoServicios(await resServicios.json());
+        };
+        cargarDatos();
+    }, []);
 
     const buscarCotizaciones = async () => {
-        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones?clienteId=${clienteSeleccionado}`)
-        const data = await res.json()
-        setCotizaciones(data)
-    }
+        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones?clienteId=${clienteSeleccionado}`);
+        const data = await res.json();
+        setCotizaciones(data);
+    };
 
     const cargarCotizacion = async (id) => {
-        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones/${id}`)
-        const data = await res.json()
-        setSeleccionada(data)
+        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones/${id}`);
+        const data = await res.json();
+        setSeleccionada(data);
         setServicios(data.detalles.map((d, i) => ({
             dia: d.dia,
             orden: d.orden,
@@ -47,27 +47,27 @@ export default function CotizacionesView() {
             tipo: d.tipoServicio,
             precio: d.precioUnitario,
             cantidad: d.cantidad
-        })))
-    }
+        })));
+    };
 
     const actualizar = (i, campo, valor) => {
-        const nuevaLista = [...servicios]
+        const nuevaLista = [...servicios];
         nuevaLista[i][campo] = campo === 'precio' || campo === 'cantidad' || campo === 'dia' || campo === 'orden'
             ? parseFloat(valor) || 0
-            : valor
-        setServicios(nuevaLista)
-    }
+            : valor;
+        setServicios(nuevaLista);
+    };
 
     const clonar = (i) => {
-        const duplicado = { ...servicios[i], orden: servicios[i].orden + 1 }
-        setServicios([...servicios, duplicado])
-    }
+        const duplicado = { ...servicios[i], orden: servicios[i].orden + 1 };
+        setServicios([...servicios, duplicado]);
+    };
 
     const eliminar = (i) => {
-        const nuevaLista = [...servicios]
-        nuevaLista.splice(i, 1)
-        setServicios(nuevaLista)
-    }
+        const nuevaLista = [...servicios];
+        nuevaLista.splice(i, 1);
+        setServicios(nuevaLista);
+    };
 
     const agregarFila = () => {
         setServicios([...servicios, {
@@ -80,11 +80,11 @@ export default function CotizacionesView() {
             tipo: "",
             precio: 0,
             cantidad: 1
-        }])
-    }
+        }]);
+    };
 
     const guardar = async () => {
-        const total = servicios.reduce((sum, s) => sum + s.precio * s.cantidad, 0)
+        const total = servicios.reduce((sum, s) => sum + s.precio * s.cantidad, 0);
         const payload = {
             ...seleccionada,
             total,
@@ -95,45 +95,57 @@ export default function CotizacionesView() {
                 dia: s.dia,
                 orden: s.orden
             }))
-        }
+        };
 
         const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones/${seleccionada.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-        })
+        });
 
         if (res.ok) {
-            alert("Cotización actualizada ✅")
+            alert("Cotización actualizada ✅");
         } else {
-            alert("❌ Error al guardar")
+            alert("❌ Error al guardar");
         }
-    }
+    };
 
     return (
-        <div className="p-6 space-y-6">
-            <h2 className="text-xl font-bold">📁 Cotizaciones Guardadas</h2>
+        <div className="p-4 space-y-6">
+            <h2 className="text-xl font-bold">Cotizaciones Guardadas</h2>
 
-            <div className="flex items-center gap-2">
-                <select value={clienteSeleccionado} onChange={e => setClienteSeleccionado(e.target.value)} className="border p-2">
+            <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                <select
+                    value={clienteSeleccionado}
+                    onChange={e => setClienteSeleccionado(e.target.value)}
+                    className="border p-2 w-full sm:w-auto"
+                >
                     <option value="">Seleccionar cliente</option>
-                    {clientes.map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
+                    {clientes.map(c => (
+                        <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>
+                    ))}
                 </select>
-                <button onClick={buscarCotizaciones} className="bg-blue-600 text-white px-4 py-1 rounded">Buscar</button>
+                <button onClick={buscarCotizaciones} className="bg-blue-600 text-white px-4 py-2 rounded">
+                    Buscar
+                </button>
             </div>
 
-            <ul className="list-disc pl-4">
+            <ul className="list-disc pl-5">
                 {cotizaciones.map(c => (
-                    <li key={c.id} className="cursor-pointer hover:underline text-blue-700" onClick={() => cargarCotizacion(c.id)}>
+                    <li
+                        key={c.id}
+                        className="cursor-pointer hover:underline text-blue-700"
+                        onClick={() => cargarCotizacion(c.id)}
+                    >
                         Cotización #{c.id} - {new Date(c.fecha).toLocaleDateString()} - Total: ${c.total.toLocaleString()}
                     </li>
                 ))}
             </ul>
 
             {seleccionada && (
-                <section>
-                    <h3 className="text-lg font-semibold">🧾 Servicios Cotizados</h3>
-                    <table className="w-full border text-sm mt-2">
+                <section className="overflow-x-auto">
+                    <h3 className="text-lg font-semibold mb-2">Servicios Cotizados</h3>
+                    <table className="min-w-full border text-sm">
                         <thead className="bg-gray-100">
                             <tr>
                                 <th className="border p-2">Día</th>
@@ -185,31 +197,22 @@ export default function CotizacionesView() {
                         <tfoot>
                             <tr>
                                 <td colSpan="9" className="text-center py-2">
-                                    <button
-                                        onClick={agregarFila}
-                                        title="Agregar fila"
-                                        className="text-2xl text-green-600 hover:text-green-800 transition-colors duration-150"
-                                    >
-                                        ➕
-                                    </button>
+                                    <button onClick={agregarFila} className="text-2xl text-green-600 hover:text-green-800 transition-colors duration-150">➕</button>
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
 
-                    <div className="flex justify-between items-center mt-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-4">
                         <p className="font-bold text-green-700 text-lg">
-                            💰 Total: ${servicios.reduce((sum, s) => sum + s.precio * s.cantidad, 0).toLocaleString()}
+                            Total: ${servicios.reduce((sum, s) => sum + s.precio * s.cantidad, 0).toLocaleString()}
                         </p>
-                        <button
-                            onClick={guardar}
-                            className="bg-blue-600 text-white px-4 py-2 rounded"
-                        >
-                            💾 Guardar Cambios
+                        <button onClick={guardar} className="bg-blue-600 text-white px-4 py-2 rounded">
+                            Guardar Cambios
                         </button>
                     </div>
                 </section>
             )}
         </div>
-    )
+    );
 }

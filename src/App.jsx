@@ -4,6 +4,7 @@ import CotizadorView from './admin/CotizadorView'
 import ProveedoresView from './admin/ProveedoresView'
 import ServiciosView from './admin/ServiciosView'
 import CotizacionesView from './admin/CotizacionesView'
+import Layout from './admin/Layout'
 
 export default function App() {
   return (

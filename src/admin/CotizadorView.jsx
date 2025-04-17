@@ -172,33 +172,35 @@ export default function CotizadorView() {
 
 
     return (
-        <div className="p-6 space-y-8">
+        <div className="p-4 md:p-6 space-y-8">
             <section>
-                <div className="flex items-center space-x-4 mb-4">
+                <div className="flex flex-col md:flex-row md:items-center md:space-x-4 gap-2 mb-4">
                     <label className="font-bold">Cliente:</label>
-                    <select
-                        className="border p-2 rounded"
-                        value={clienteSeleccionado}
-                        onChange={e => setClienteSeleccionado(e.target.value)}
-                    >
-                        <option value="">-- Seleccionar cliente --</option>
-                        {clientes.map(c => (
-                            <option key={c.id} value={c.id}>
-                                {c.nombre} {c.apellido} ({c.dni})
-                            </option>
-                        ))}
-                    </select>
-                    <button
-                        onClick={() => setMostrarModal(true)}
-                        className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                    >
-                        ➕ Agregar
-                    </button>
+                    <div className="flex gap-2 flex-col sm:flex-row">
+                        <select
+                            className="border p-2 rounded w-full sm:w-auto"
+                            value={clienteSeleccionado}
+                            onChange={e => setClienteSeleccionado(e.target.value)}
+                        >
+                            <option value="">-- Seleccionar cliente --</option>
+                            {clientes.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.nombre} {c.apellido} ({c.dni})
+                                </option>
+                            ))}
+                        </select>
+                        <button
+                            onClick={() => setMostrarModal(true)}
+                            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                            ➕ Agregar
+                        </button>
+                    </div>
                 </div>
 
-                <h2 className="text-xl font-bold mb-2">💡 Cotización</h2>
+                <h2 className="text-xl font-bold mb-2">Cotización</h2>
                 <textarea
-                    className="border p-2 rounded w-full max-w-xl"
+                    className="border p-2 rounded w-full"
                     rows={3}
                     placeholder="Ej: Luna de miel en Bariloche, 5 días, $200.000"
                     value={mensaje}
@@ -207,83 +209,89 @@ export default function CotizadorView() {
 
                 {error && <p className="text-red-600 mt-2">{error}</p>}
             </section>
+
             <button
                 onClick={cotizar}
-                className="mt-2 bg-blue-600 text-white px-4 py-2 rounded"
+                className="mt-2 bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
             >
                 {cargando ? '⏳ Generando...' : '🎯 Cotizar'}
             </button>
+
             <section>
-                <table className="w-full border text-sm">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="border p-2">Día</th>
-                            <th className="border p-2">Orden</th>
-                            <th className="border p-2">Destino</th>
-                            <th className="border p-2">Proveedor</th>
-                            <th className="border p-2">Servicio</th>
-                            <th className="border p-2">Precio</th>
-                            <th className="border p-2">Personas</th>
-                            <th className="border p-2">Total</th>
-                            <th className="border p-2">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {servicios.map((s, i) => (
-                            <tr key={s.id}>
-                                <td className="border p-1"><input type="number" value={s.dia} onChange={e => actualizar(i, 'dia', e.target.value)} className="w-14 border" /></td>
-                                <td className="border p-1"><input type="number" value={s.orden} onChange={e => actualizar(i, 'orden', e.target.value)} className="w-14 border" /></td>
-                                <td className="border p-1">
-                                    <select value={s.idDestino} onChange={e => actualizar(i, 'idDestino', e.target.value)} className="border w-full">
-                                        <option value="">--</option>
-                                        {destinos.map(d => <option key={d.id} value={d.id}>{d.descripcion}</option>)}
-                                    </select>
-                                </td>
-                                <td className="border p-1">
-                                    <select value={s.idProveedor} onChange={e => actualizar(i, 'idProveedor', e.target.value)} className="border w-full">
-                                        <option value="">--</option>
-                                        {proveedores.filter(p => parseInt(p.iD_Destino) === parseInt(s.idDestino))
-                                            .map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
-                                    </select>
-                                </td>
-                                <td className="border p-1">
-                                    <select value={s.idServicio} onChange={e => actualizar(i, 'idServicio', e.target.value)} className="border w-full">
-                                        <option value="">--</option>
-                                        {catalogoServicios.filter(sv => parseInt(sv.iD_Proveedor) === parseInt(s.idProveedor))
-                                            .map(sv => <option key={sv.id} value={sv.id}>{sv.descripcion}</option>)}
-                                    </select>
-                                </td>
-                                <td className="border p-1"><input type="number" value={s.precio} onChange={e => actualizar(i, 'precio', e.target.value)} className="w-20 border text-right" /></td>
-                                <td className="border p-1"><input type="number" value={s.cantidad} onChange={e => actualizar(i, 'cantidad', e.target.value)} className="w-16 border text-right" /></td>
-                                <td className="border p-1 text-right">${(s.precio * s.cantidad).toLocaleString()}</td>
-                                <td className="border p-1">
-                                    <button onClick={() => clonar(i)} className="text-blue-600 mr-2">🌀</button>
-                                    <button onClick={() => eliminar(i)} className="text-red-600">🗑</button>
+                <div className="overflow-x-auto">
+                    <table className="w-full border text-xs md:text-sm">
+                        <thead className="bg-gray-100 text-left">
+                            <tr>
+                                <th className="border p-2">Día</th>
+                                <th className="border p-2">Orden</th>
+                                <th className="border p-2">Destino</th>
+                                <th className="border p-2">Proveedor</th>
+                                <th className="border p-2">Servicio</th>
+                                <th className="border p-2">Precio</th>
+                                <th className="border p-2">Personas</th>
+                                <th className="border p-2">Total</th>
+                                <th className="border p-2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {servicios.map((s, i) => (
+                                <tr key={s.id}>
+                                    <td className="border p-1"><input type="number" value={s.dia} onChange={e => actualizar(i, 'dia', e.target.value)} className="w-14 border" /></td>
+                                    <td className="border p-1"><input type="number" value={s.orden} onChange={e => actualizar(i, 'orden', e.target.value)} className="w-14 border" /></td>
+                                    <td className="border p-1">
+                                        <select value={s.idDestino} onChange={e => actualizar(i, 'idDestino', e.target.value)} className="border w-full">
+                                            <option value="">--</option>
+                                            {destinos.map(d => <option key={d.id} value={d.id}>{d.descripcion}</option>)}
+                                        </select>
+                                    </td>
+                                    <td className="border p-1">
+                                        <select value={s.idProveedor} onChange={e => actualizar(i, 'idProveedor', e.target.value)} className="border w-full">
+                                            <option value="">--</option>
+                                            {proveedores.filter(p => parseInt(p.iD_Destino) === parseInt(s.idDestino))
+                                                .map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                                        </select>
+                                    </td>
+                                    <td className="border p-1">
+                                        <select value={s.idServicio} onChange={e => actualizar(i, 'idServicio', e.target.value)} className="border w-full">
+                                            <option value="">--</option>
+                                            {catalogoServicios.filter(sv => parseInt(sv.iD_Proveedor) === parseInt(s.idProveedor))
+                                                .map(sv => <option key={sv.id} value={sv.id}>{sv.descripcion}</option>)}
+                                        </select>
+                                    </td>
+                                    <td className="border p-1"><input type="number" value={s.precio} onChange={e => actualizar(i, 'precio', e.target.value)} className="w-20 border text-right" /></td>
+                                    <td className="border p-1"><input type="number" value={s.cantidad} onChange={e => actualizar(i, 'cantidad', e.target.value)} className="w-16 border text-right" /></td>
+                                    <td className="border p-1 text-right">${(s.precio * s.cantidad).toLocaleString()}</td>
+                                    <td className="border p-1">
+                                        <button onClick={() => clonar(i)} className="text-blue-600 mr-2">🌀</button>
+                                        <button onClick={() => eliminar(i)} className="text-red-600">🗑</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colSpan="9" className="text-center py-2">
+                                    <button
+                                        onClick={agregarFila}
+                                        title="Agregar fila"
+                                        className="text-2xl text-green-600 hover:text-green-800 transition-colors duration-150"
+                                    >
+                                        ➕
+                                    </button>
                                 </td>
                             </tr>
-                        ))}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colSpan="9" className="text-center py-2">
-                                <button
-                                    onClick={agregarFila}
-                                    title="Agregar fila"
-                                    className="text-2xl text-green-600 hover:text-green-800 transition-colors duration-150"
-                                >
-                                    ➕
-                                </button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+                </div>
+
                 <button
                     onClick={guardarCotizacion}
-                    className="bg-blue-600 text-white px-4 py-2 rounded mt-4"
+                    className="bg-blue-600 text-white px-4 py-2 rounded mt-4 w-full sm:w-auto"
                 >
                     💾 Guardar Cotización
                 </button>
-                <div className="flex justify-between items-center mt-4">
+
+                <div className="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <p className="font-bold text-green-700 text-lg">
                         💰 Total: ${total.toLocaleString()}
                     </p>
@@ -296,5 +304,6 @@ export default function CotizadorView() {
                 onGuardar={guardarCliente}
             />
         </div>
+
     );
 }
