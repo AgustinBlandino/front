@@ -219,8 +219,8 @@ export default function CotizadorView() {
 
             <section>
                 <div className="overflow-x-auto">
-                    <table className="w-full border text-xs md:text-sm">
-                        <thead className="bg-gray-100 text-left">
+                    <table className="min-w-[800px] w-full text-xs md:text-sm border">
+                        <thead className="bg-gray-100">
                             <tr>
                                 <th className="border p-2">Día</th>
                                 <th className="border p-2">Orden</th>
@@ -236,67 +236,73 @@ export default function CotizadorView() {
                         <tbody>
                             {servicios.map((s, i) => (
                                 <tr key={s.id}>
-                                    <td className="border p-1"><input type="number" value={s.dia} onChange={e => actualizar(i, 'dia', e.target.value)} className="w-14 border" /></td>
-                                    <td className="border p-1"><input type="number" value={s.orden} onChange={e => actualizar(i, 'orden', e.target.value)} className="w-14 border" /></td>
                                     <td className="border p-1">
-                                        <select value={s.idDestino} onChange={e => actualizar(i, 'idDestino', e.target.value)} className="border w-full">
+                                        <input type="number" value={s.dia} onChange={e => actualizar(i, 'dia', e.target.value)} className="w-16 border rounded" />
+                                    </td>
+                                    <td className="border p-1">
+                                        <input type="number" value={s.orden} onChange={e => actualizar(i, 'orden', e.target.value)} className="w-16 border rounded" />
+                                    </td>
+                                    <td className="border p-1">
+                                        <select value={s.idDestino} onChange={e => actualizar(i, 'idDestino', e.target.value)} className="w-full border rounded">
                                             <option value="">--</option>
                                             {destinos.map(d => <option key={d.id} value={d.id}>{d.descripcion}</option>)}
                                         </select>
                                     </td>
                                     <td className="border p-1">
-                                        <select value={s.idProveedor} onChange={e => actualizar(i, 'idProveedor', e.target.value)} className="border w-full">
+                                        <select value={s.idProveedor} onChange={e => actualizar(i, 'idProveedor', e.target.value)} className="w-full border rounded">
                                             <option value="">--</option>
                                             {proveedores.filter(p => parseInt(p.iD_Destino) === parseInt(s.idDestino))
                                                 .map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
                                         </select>
                                     </td>
                                     <td className="border p-1">
-                                        <select value={s.idServicio} onChange={e => actualizar(i, 'idServicio', e.target.value)} className="border w-full">
+                                        <select value={s.idServicio} onChange={e => actualizar(i, 'idServicio', e.target.value)} className="w-full border rounded">
                                             <option value="">--</option>
                                             {catalogoServicios.filter(sv => parseInt(sv.iD_Proveedor) === parseInt(s.idProveedor))
                                                 .map(sv => <option key={sv.id} value={sv.id}>{sv.descripcion}</option>)}
                                         </select>
                                     </td>
-                                    <td className="border p-1"><input type="number" value={s.precio} onChange={e => actualizar(i, 'precio', e.target.value)} className="w-20 border text-right" /></td>
-                                    <td className="border p-1"><input type="number" value={s.cantidad} onChange={e => actualizar(i, 'cantidad', e.target.value)} className="w-16 border text-right" /></td>
-                                    <td className="border p-1 text-right">${(s.precio * s.cantidad).toLocaleString()}</td>
                                     <td className="border p-1">
-                                        <button onClick={() => clonar(i)} className="text-blue-600 mr-2">🌀</button>
-                                        <button onClick={() => eliminar(i)} className="text-red-600">🗑</button>
+                                        <input type="number" value={s.precio} onChange={e => actualizar(i, 'precio', e.target.value)} className="w-20 border text-right rounded" />
+                                    </td>
+                                    <td className="border p-1">
+                                        <input type="number" value={s.cantidad} onChange={e => actualizar(i, 'cantidad', e.target.value)} className="w-20 border text-right rounded" />
+                                    </td>
+                                    <td className="border p-1 text-right">${(s.precio * s.cantidad).toLocaleString()}</td>
+                                    <td className="border p-1 text-center">
+                                        <div className="flex gap-1 justify-center">
+                                            <button onClick={() => clonar(i)} className="text-blue-600">🌀</button>
+                                            <button onClick={() => eliminar(i)} className="text-red-600">🗑</button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colSpan="9" className="text-center py-2">
-                                    <button
-                                        onClick={agregarFila}
-                                        title="Agregar fila"
-                                        className="text-2xl text-green-600 hover:text-green-800 transition-colors duration-150"
-                                    >
-                                        ➕
-                                    </button>
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
 
-                <button
-                    onClick={guardarCotizacion}
-                    className="bg-blue-600 text-white px-4 py-2 rounded mt-4 w-full sm:w-auto"
-                >
-                    💾 Guardar Cotización
-                </button>
+                <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-4">
+                    <button
+                        onClick={agregarFila}
+                        title="Agregar fila"
+                        className="text-2xl text-green-600 hover:text-green-800 transition"
+                    >
+                        ➕
+                    </button>
 
-                <div className="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <button
+                        onClick={guardarCotizacion}
+                        className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+                    >
+                        💾 Guardar Cotización
+                    </button>
+
                     <p className="font-bold text-green-700 text-lg">
                         💰 Total: ${total.toLocaleString()}
                     </p>
                 </div>
             </section>
+
 
             <ClientModal
                 isOpen={mostrarModal}
