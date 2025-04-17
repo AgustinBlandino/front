@@ -10,7 +10,7 @@ export default function ServiciosView() {
   })
 
   const cargar = async () => {
-    const resServicios = await fetch('https://backend-anda.railway.internal/api/servicios')
+    const resServicios = await fetch('https://backend-anda-production.up.railway.app/api/servicios')
     const data = await resServicios.json()
     const serviciosNormalizados = data.map(s => ({
       ...s,
@@ -20,10 +20,10 @@ export default function ServiciosView() {
     setServicios(serviciosNormalizados)
 
 
-    const resProveedores = await fetch('https://backend-anda.railway.internal/api/proveedores')
+    const resProveedores = await fetch('https://backend-anda-production.up.railway.app/api/proveedores')
     setProveedores(await resProveedores.json())
 
-    const resDestinos = await fetch('https://backend-anda.railway.internal/api/destinos')
+    const resDestinos = await fetch('https://backend-anda-production.up.railway.app/api/destinos')
 
 
     setDestinos(await resDestinos.json())
@@ -33,7 +33,7 @@ export default function ServiciosView() {
 
   const guardar = async () => {
     if (!nuevo.tipoServicio || !nuevo.descripcion) return
-    await fetch('https://backend-anda.railway.internal/api/servicios', {
+    await fetch('https://backend-anda-production.up.railway.app/api/servicios', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(nuevo)
@@ -46,7 +46,7 @@ export default function ServiciosView() {
   }
 
   const borrar = async (id) => {
-    await fetch(`https://backend-anda.railway.internal/api/servicios/${id}`, { method: 'DELETE' })
+    await fetch(`https://backend-anda-production.up.railway.app/api/servicios/${id}`, { method: 'DELETE' })
     cargar()
   }
 

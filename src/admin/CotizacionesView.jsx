@@ -14,10 +14,10 @@ export default function CotizacionesView() {
     useEffect(() => {
         const cargarDatos = async () => {
             const [resClientes, resDestinos, resProveedores, resServicios] = await Promise.all([
-                fetch('https://backend-anda.railway.internal/api/clientes'),
-                fetch('https://backend-anda.railway.internal/api/destinos'),
-                fetch('https://backend-anda.railway.internal/api/proveedores'),
-                fetch('https://backend-anda.railway.internal/api/servicios'),
+                fetch('https://backend-anda-production.up.railway.app/api/clientes'),
+                fetch('https://backend-anda-production.up.railway.app/api/destinos'),
+                fetch('https://backend-anda-production.up.railway.app/api/proveedores'),
+                fetch('https://backend-anda-production.up.railway.app/api/servicios'),
             ])
             setClientes(await resClientes.json())
             setDestinos(await resDestinos.json())
@@ -28,13 +28,13 @@ export default function CotizacionesView() {
     }, [])
 
     const buscarCotizaciones = async () => {
-        const res = await fetch(`https://backend-anda.railway.internal/api/ia/cotizaciones?clienteId=${clienteSeleccionado}`)
+        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones?clienteId=${clienteSeleccionado}`)
         const data = await res.json()
         setCotizaciones(data)
     }
 
     const cargarCotizacion = async (id) => {
-        const res = await fetch(`https://backend-anda.railway.internal/api/ia/cotizaciones/${id}`)
+        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones/${id}`)
         const data = await res.json()
         setSeleccionada(data)
         setServicios(data.detalles.map((d, i) => ({
@@ -97,7 +97,7 @@ export default function CotizacionesView() {
             }))
         }
 
-        const res = await fetch(`https://backend-anda.railway.internal/api/ia/cotizaciones/${seleccionada.id}`, {
+        const res = await fetch(`https://backend-anda-production.up.railway.app/api/ia/cotizaciones/${seleccionada.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
