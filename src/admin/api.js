@@ -1,4 +1,4 @@
-const API_URL = "backend-anda.railway.internal/api";
+const API_URL = "https://backend-anda.railway.internal/api";
 
 export async function fetchProveedores() {
   const res = await fetch(`${API_URL}/proveedores`);

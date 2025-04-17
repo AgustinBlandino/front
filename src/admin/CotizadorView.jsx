@@ -17,10 +17,10 @@ export default function CotizadorView() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const d = await fetch('backend-anda.railway.internal/api/destinos').then(r => r.json());
-            const p = await fetch('backend-anda.railway.internal/api/proveedores').then(r => r.json());
-            const s = await fetch('backend-anda.railway.internal/api/servicios').then(r => r.json());
-            const c = await fetch('backend-anda.railway.internal/api/clientes').then(r => r.json());
+            const d = await fetch('https://backend-anda.railway.internal/api/destinos').then(r => r.json());
+            const p = await fetch('https://backend-anda.railway.internal/api/proveedores').then(r => r.json());
+            const s = await fetch('https://backend-anda.railway.internal/api/servicios').then(r => r.json());
+            const c = await fetch('https://backend-anda.railway.internal/api/clientes').then(r => r.json());
 
             setDestinos(d);
             setProveedores(p);
@@ -41,7 +41,7 @@ export default function CotizadorView() {
         setError(null);
 
         try {
-            const res = await fetch('backend-anda.railway.internal/api/ia/cotizar', {
+            const res = await fetch('https://backend-anda.railway.internal/api/ia/cotizar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mensaje })
@@ -127,7 +127,7 @@ export default function CotizadorView() {
     };
 
     const guardarCliente = async nuevo => {
-        const res = await fetch('backend-anda.railway.internal/api/clientes', {
+        const res = await fetch('https://backend-anda.railway.internal/api/clientes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(nuevo)
@@ -157,7 +157,7 @@ export default function CotizadorView() {
             }))
         };
 
-        const res = await fetch('backend-anda.railway.internal/api/ia/guardar', {
+        const res = await fetch('https://backend-anda.railway.internal/api/ia/guardar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
