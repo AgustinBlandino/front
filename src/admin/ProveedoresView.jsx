@@ -7,7 +7,7 @@ export default function ProveedoresView() {
   })
 
   const cargar = async () => {
-    const res = await fetch('http://localhost:5000/api/proveedores')
+    const res = await fetch('backend-anda.railway.internal/api/proveedores')
     const data = await res.json()
     setProveedores(data)
   }
@@ -16,7 +16,7 @@ export default function ProveedoresView() {
 
   const guardar = async () => {
     if (!nuevo.nombre) return
-    await fetch('http://localhost:5000/api/proveedores', {
+    await fetch('backend-anda.railway.internal/api/proveedores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(nuevo)
@@ -26,7 +26,7 @@ export default function ProveedoresView() {
   }
 
   const borrar = async (id) => {
-    await fetch(`http://localhost:5000/api/proveedores/${id}`, { method: 'DELETE' })
+    await fetch(`backend-anda.railway.internal/api/proveedores/${id}`, { method: 'DELETE' })
     cargar()
   }
 

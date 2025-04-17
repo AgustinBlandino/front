@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api";
+const API_URL = "backend-anda.railway.internal/api";
 
 export async function fetchProveedores() {
   const res = await fetch(`${API_URL}/proveedores`);
